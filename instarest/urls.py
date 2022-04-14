@@ -17,8 +17,9 @@ from django.contrib import admin
 from django.urls import path, include
 
 import service_creator.urls
-
+import service_provider.urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('service/', include(service_creator.urls.urlpatterns)),
+    path('provider/', include(service_provider.urls.urlpatterns)),
 ]
