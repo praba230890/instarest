@@ -7,10 +7,15 @@ from service_creator.models import Endpoint
 def index(request):
     path = request.path[9:]
     method = request.method
-    headers = request.headers
-    print(headers)
+    # headers = request.headers
 
+    if request.META.get('CONTENT_TYPE') != "application/json":
+        return JsonResponse({"error": "Content-Type must be application/json"})
+
+    req_body = json.loads(request.body)
     endpoint = Endpoint.objects.get(path=path)
+    endpoint_body = json.loads(endpoint.request)
     response = json.loads(endpoint.response)
-    print(response)
-    return JsonResponse(response)
+    if req_body == endpoint_body:
+        return JsonResponse(response)
+    return JsonResponse({"error": "No data found for this request"})

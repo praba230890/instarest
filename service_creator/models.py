@@ -1,4 +1,5 @@
 from django.db import models
+import re
 
 # Create your models here.
 class Service(models.Model):
@@ -20,6 +21,11 @@ class Endpoint(models.Model):
     response = models.TextField()
     headers = models.TextField()
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        self.request = re.sub(r'(\s|\u180B|\u200B|\u200C|\u200D|\u2060|\uFEFF)+', '', self.request)
+        self.response = re.sub(r'(\s|\u180B|\u200B|\u200C|\u200D|\u2060|\uFEFF)+', '', self.response)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name + " : " + self.path
