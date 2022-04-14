@@ -7,6 +7,9 @@ authors = ["Prabakaran Santhanam <praba230890@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.9"
 Django = "4.0.4"
+djangorestframework = "^3.13.1"
+Markdown = "^3.3.6"
+django-filter = "^21.1"
 
 [tool.poetry.dev-dependencies]
 
