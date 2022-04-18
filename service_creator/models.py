@@ -1,10 +1,21 @@
-from django.db import models
 import re
+import hashlib
 
-# Create your models here.
+from django.db import models
+
+
 class Service(models.Model):
     name = models.CharField(max_length=30)
     description = models.CharField(max_length=120)
+    service_identifier = models.CharField(max_length=30, unique=True)
+
+    def save(self, *args, **kwargs):
+        hash_object = hashlib.sha1(self.name.encode('utf-8'))
+        try:
+            self.service_identifier = str(Service.objects.latest('id').id+1)
+        except:
+            self.service_identifier = str(1)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -21,6 +32,7 @@ class Endpoint(models.Model):
     response = models.TextField()
     headers = models.TextField()
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    validate_request = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         self.request = re.sub(r'(\s|\u180B|\u200B|\u200C|\u200D|\u2060|\uFEFF)+', '', self.request)
